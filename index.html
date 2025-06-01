@@ -10,7 +10,6 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <style>
         body {
-            /* ★★★ URL de VOTRE image de fond ★★★ */
             background-image: url('https://cdn.pixabay.com/photo/2017/08/30/01/05/milky-way-2695569_1280.jpg');
             background-attachment: fixed;
             background-position: center;
@@ -75,7 +74,7 @@
             }
         };
 
-        const emptyContentPlaceholder = "<p><em>Contenu à venir...</em></p>"; // Conservé pour les autres chapitres non-PDF
+        const emptyContentPlaceholder = "<p><em>Contenu à venir...</em></p>";
         const coursesData = {
             chimie: {
                 title: "Chimie", icon: "🧪", description: "Les fondements de la chimie moderne.",
@@ -88,7 +87,7 @@
                             { icon: "✅", title: "Corrigés Exercices - Chimie des solutions", content: emptyContentPlaceholder }
                         ]
                     },
-                    atomistique: { // SECTION ATOMISTIQUE MISE À JOUR
+                    atomistique: { // SECTION ATOMISTIQUE MISE À JOUR AVEC LES BONS CHEMINS PDF
                         title: "Atomistique", 
                         icon: "⚛️",
                         chapters: [
@@ -99,7 +98,7 @@
                                     <h3>Chapitre 1 - Atomistique (Cours)</h3>
                                     <p>Notes de cours pour le premier chapitre d'atomistique.</p>
                                     <p class="mt-4">
-                                        <a href="pdf-cours-exercice/atomistique/cours/Atomistique_Chapitre_1.pdf" 
+                                        <a href="Atomistique_Chapitre_1.pdf" 
                                            target="_blank" 
                                            rel="noopener noreferrer"
                                            class="inline-block bg-sky-500 hover:bg-sky-600 text-white font-semibold py-2 px-4 rounded-lg shadow hover:shadow-md transition-all duration-200 ease-in-out transform hover:scale-105">
@@ -115,7 +114,7 @@
                                     <h3>Chapitre 2 - Atomistique (Cours)</h3>
                                     <p>Notes de cours pour le deuxième chapitre d'atomistique.</p>
                                     <p class="mt-4">
-                                        <a href="pdf-cours-exercice/atomistique/cours/Atomistique_Chapitre_2.pdf" 
+                                        <a href="Atomistique_Chapitre_2.pdf" 
                                            target="_blank" 
                                            rel="noopener noreferrer"
                                            class="inline-block bg-sky-500 hover:bg-sky-600 text-white font-semibold py-2 px-4 rounded-lg shadow hover:shadow-md transition-all duration-200 ease-in-out transform hover:scale-105">
@@ -131,7 +130,7 @@
                                     <h3>Chapitre 2 - Atomistique (Exercices Corrigés)</h3>
                                     <p>Corrigés des exercices pour le deuxième chapitre d'atomistique.</p>
                                     <p class="mt-4">
-                                        <a href="pdf-cours-exercice/atomistique/cours/Atomistique_Chapitre_2_exo.pdf" 
+                                        <a href="Atomistique_Chapitre_2_exo.pdf" 
                                            target="_blank" 
                                            rel="noopener noreferrer"
                                            class="inline-block bg-green-500 hover:bg-green-600 text-white font-semibold py-2 px-4 rounded-lg shadow hover:shadow-md transition-all duration-200 ease-in-out transform hover:scale-105">
@@ -147,7 +146,7 @@
                                     <h3>Chapitre 3 - Atomistique (Cours)</h3>
                                     <p>Notes de cours pour le troisième chapitre d'atomistique.</p>
                                     <p class="mt-4">
-                                        <a href="pdf-cours-exercice/atomistique/cours/Atomistique_Chapitre_3.pdf" 
+                                        <a href="Atomistique_Chapitre_3.pdf" 
                                            target="_blank" 
                                            rel="noopener noreferrer"
                                            class="inline-block bg-sky-500 hover:bg-sky-600 text-white font-semibold py-2 px-4 rounded-lg shadow hover:shadow-md transition-all duration-200 ease-in-out transform hover:scale-105">
@@ -192,22 +191,15 @@
         let currentView = { name: 'home', args: [] };
 
         function updateContent(newHtmlContent, newPageH1Title, newBreadcrumbParts) {
-            // console.log("updateContent - Start. Target H1:", newPageH1Title);
             contentArea.classList.add('content-exit-active');
-
             setTimeout(() => {
-                // console.log("updateContent - Timeout triggered. Setting H1 and innerHTML.");
                 mainTitleElement.textContent = newPageH1Title;
                 contentArea.innerHTML = newHtmlContent; 
                 updateBreadcrumb(newBreadcrumbParts);
-
                 contentArea.classList.remove('content-exit-active');
                 contentArea.classList.add('content-enter-prepare');
-                
                 void contentArea.offsetHeight; 
-
                 contentArea.classList.remove('content-enter-prepare');
-                // console.log("updateContent - Content updated and entry animation triggered.");
                 window.scrollTo({ top: 0, behavior: 'smooth' });
             }, 500); 
         }
@@ -223,7 +215,6 @@
                 }
                 return `<span class="text-gray-400">${part.text}</span>`;
             }).join(' <span class="mx-1 text-sky-400">/</span> ');
-            
             parts.forEach((part, index) => {
                 if (part.onClick) {
                     const el = document.getElementById(`breadcrumb-${index}`);
@@ -237,7 +228,6 @@
         }
 
         function renderHomePage() {
-            // console.log("renderHomePage - Start");
             let homeHtml = '<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">';
             for (const key in coursesData) {
                 const subject = coursesData[key];
@@ -252,14 +242,11 @@
             homeHtml += '</div>';
             updateContent(homeHtml, "Cours L1 Physique/Chimie", [{ text: "Accueil" }]);
             backButton.classList.add('hidden');
-            // console.log("renderHomePage - End");
         }
 
         function renderSubjectPage(subjectKey) {
-            // console.log("renderSubjectPage - Start for:", subjectKey);
             const subject = coursesData[subjectKey];
             if (!subject) { console.error("Subject not found:", subjectKey); renderHomePage(); return; }
-            
             let subjectHtml = `<h2 class="text-3xl font-bold text-sky-700 mb-6 text-center flex justify-center items-center"><span class="text-3xl mr-2">${subject.icon}</span>${subject.title}</h2><div class="space-y-4">`;
             if (subject.themes) {
                 for (const themeKey in subject.themes) {
@@ -277,15 +264,12 @@
             const breadcrumbParts = [{ text: "Accueil", onClick: () => navigateTo('home') }, { text: subject.title }];
             updateContent(subjectHtml, subject.title, breadcrumbParts); 
             backButton.classList.remove('hidden');
-            // console.log("renderSubjectPage - End for:", subjectKey);
         }
 
         function renderThemePage(subjectKey, themeKey) {
-            // console.log("renderThemePage - Start for:", subjectKey, themeKey);
             const subject = coursesData[subjectKey]; 
             const theme = subject?.themes?.[themeKey]; 
             if (!theme) { console.error("Theme not found for:", subjectKey, themeKey); renderSubjectPage(subjectKey); return; }
-
             let themeHtml = `<h2 class="text-3xl font-bold text-sky-700 mb-6 text-center flex justify-center items-center"><span class="text-3xl mr-2">${theme.icon || '▫️'}</span>${theme.title}</h2><div class="space-y-3">`;
             if (theme.chapters) {
                 theme.chapters.forEach((chapter, index) => {
@@ -302,16 +286,13 @@
             const breadcrumbParts = [ { text: "Accueil", onClick: () => navigateTo('home') }, { text: subject.title, onClick: () => navigateTo('subject', subjectKey) }, { text: theme.title }];
             updateContent(themeHtml, theme.title, breadcrumbParts); 
             backButton.classList.remove('hidden');
-            // console.log("renderThemePage - End for:", subjectKey, themeKey);
         }
 
         function renderChapterPage(subjectKey, themeKey, chapterIndex) {
-            // console.log("renderChapterPage - Start for:", subjectKey, themeKey, chapterIndex);
             const subject = coursesData[subjectKey]; 
             const theme = subject?.themes?.[themeKey]; 
             const chapter = theme?.chapters?.[chapterIndex];
             if (!chapter) { console.error("Chapter not found for:", subjectKey, themeKey, chapterIndex); renderThemePage(subjectKey, themeKey); return; }
-            
             let chapterHtml = `
                 <div class="bg-white/90 backdrop-blur-sm p-6 rounded-lg shadow-inner">
                     <h2 class="text-3xl font-bold text-sky-700 mb-4 pb-2 border-b border-sky-200 flex items-center">
@@ -324,17 +305,11 @@
             const breadcrumbParts = [ { text: "Accueil", onClick: () => navigateTo('home') }, { text: subject.title, onClick: () => navigateTo('subject', subjectKey) }, { text: theme.title, onClick: () => navigateTo('theme', subjectKey, themeKey) }, { text: chapter.title }];
             updateContent(chapterHtml, chapter.title, breadcrumbParts); 
             backButton.classList.remove('hidden');
-            // console.log("renderChapterPage - End for:", subjectKey, themeKey, chapterIndex);
         }
         
         function navigateTo(view, ...args) {
-            // console.log(`MapsTo - Start. View: ${view}, Args: ${JSON.stringify(args)}`);
-            // console.log("navigateTo - Current navigationStack (before push attempt):", JSON.parse(JSON.stringify(navigationStack)));
             const stateToPush = { ...currentView }; 
             const isNavigatingToSameAsCurrent = (view === currentView.name && JSON.stringify(args) === JSON.stringify(currentView.args));
-            // console.log("navigateTo - State to potentially push (old currentView):", JSON.parse(JSON.stringify(stateToPush)));
-            // console.log("navigateTo - Is navigating to same as current?", isNavigatingToSameAsCurrent);
-
             if (!isNavigatingToSameAsCurrent) {
                 let shouldPush = false;
                 if (stateToPush.name !== 'home' || (stateToPush.name === 'home' && view !== 'home')) {
@@ -343,21 +318,11 @@
                 if (shouldPush) {
                     const lastStackItem = navigationStack.length > 0 ? navigationStack[navigationStack.length - 1] : null;
                     if (!lastStackItem || lastStackItem.name !== stateToPush.name || JSON.stringify(lastStackItem.args) !== JSON.stringify(stateToPush.args)) {
-                        // console.log("navigateTo - Pushing to navigationStack:", JSON.parse(JSON.stringify(stateToPush)));
                          navigationStack.push(stateToPush);
-                    } else {
-                        // console.log("navigateTo - Not pushing duplicate state to stack:", JSON.parse(JSON.stringify(stateToPush)));
                     }
-                } else {
-                    // console.log("navigateTo - Not pushing to stack.");
                 }
-            } else {
-                // console.log("navigateTo - Navigating to the same view, not pushing to stack.");
             }
             currentView = { name: view, args: [...args] };
-            // console.log("navigateTo - New currentView set to:", JSON.parse(JSON.stringify(currentView)));
-            // console.log("navigateTo - Current navigationStack (after potential push):", JSON.parse(JSON.stringify(navigationStack)));
-
             switch (view) {
                 case 'home': renderHomePage(); break;
                 case 'subject': renderSubjectPage(...args); break;
@@ -367,16 +332,12 @@
                     console.error("Unknown view in navigateTo:", view);
                     renderHomePage();
             }
-            // console.log(`MapsTo - End. View: ${view}`);
         }
 
         function navigateBack() {
-            // console.log("navigateBack - Start. Current stack BEFORE pop:", JSON.parse(JSON.stringify(navigationStack)));
             if (navigationStack.length > 0) {
                 const previousState = navigationStack.pop();
                 currentView = { ...previousState }; 
-                // console.log("navigateBack - Popped from stack. Going to state:", JSON.parse(JSON.stringify(previousState)));
-                // console.log("navigateBack - Current stack AFTER pop:", JSON.parse(JSON.stringify(navigationStack)));
                 switch (previousState.name) {
                     case 'home': renderHomePage(); break;
                     case 'subject': renderSubjectPage(...previousState.args); break;
@@ -386,17 +347,14 @@
                         renderHomePage();
                 }
             } else {
-                // console.warn("navigateBack - Navigation stack empty, attempting to go to home.");
                 currentView = { name: 'home', args: [] };
                 renderHomePage();
             }
-            // console.log("navigateBack - End.");
         }
         
         backButton.addEventListener('click', navigateBack);
 
         document.addEventListener('DOMContentLoaded', () => {
-            // console.log("DOM fully loaded and parsed");
             currentView = { name: 'home', args: [] }; 
             renderHomePage();
             document.getElementById('currentYear').textContent = new Date().getFullYear();
