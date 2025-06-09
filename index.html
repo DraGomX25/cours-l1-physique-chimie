@@ -295,6 +295,17 @@
         .sim-button { background: var(--primary-color); color: var(--background-color); border: none; padding: 0.6rem 1.2rem; border-radius: 50px; font-weight: 700; cursor: pointer; transition: all 0.3s ease; font-size: 1rem; }
         .sim-button:hover { transform: scale(1.1); box-shadow: 0 0 15px var(--primary-color); }
         .sim-button.secondary { background: transparent; color: var(--primary-color); border: 2px solid var(--primary-color); }
+        
+        /* --- NOUVEAUX STYLES POUR L'ESPACE PERSONNEL --- */
+        .progress-dashboard { display: flex; flex-direction: column; gap: 1.5rem; }
+        .progress-subject { display: grid; grid-template-columns: 100px 1fr 50px; align-items: center; gap: 1rem; }
+        .progress-bar-container { width: 100%; height: 10px; background-color: rgba(255, 255, 255, 0.1); border-radius: 5px; overflow: hidden; }
+        .progress-bar { height: 100%; width: 0%; border-radius: 5px; transition: width 0.5s ease-in-out; }
+        #physique-progress-bar { background-color: var(--primary-color); }
+        #chimie-progress-bar { background-color: var(--secondary-color); }
+        #maths-progress-bar { background-color: var(--maths-color); }
+        .progress-percentage { font-weight: 700; font-family: 'Exo 2', sans-serif; }
+
 
         /* --- STYLES FOOTER --- */
         .site-footer { padding: 2rem; text-align: center; background-color: rgba(18,18,32,0.6); margin-top: 4rem; border-top: 1px solid var(--primary-color); }
@@ -306,7 +317,6 @@
 </head>
 <body>
     
-    <!-- Conteneurs de particules pour chaque page -->
     <div id="particles-accueil" class="particle-container active"></div>
     <div id="particles-physique" class="particle-container"></div>
     <div id="particles-chimie" class="particle-container"></div>
@@ -333,7 +343,6 @@
             <a class="nav-link nav-item hidden" id="logout-link"><i class="fas fa-sign-out-alt"></i> Déconnexion</a>
         </nav>
 
-        <!-- Page Accueil -->
         <div id="page-accueil" class="page-view active">
             <header class="header" data-aos="fade-down"><h1>Hub du Savoir</h1><p>Votre portail vers la réussite en L1 Physique-Chimie</p></header>
             <main class="main-content">
@@ -349,14 +358,12 @@
             </main>
         </div>
 
-        <!-- Page Physique -->
         <div id="page-physique" class="page-view">
             <header class="subject-header"><h1><i class="fas fa-atom"></i>Physique</h1></header>
             <main class="content-container">
                 <section class="resource-category" data-aos="fade-up"><h2><i class="fas fa-book-open"></i> Cours</h2>
                     <div class="resource-list" id="physique-cours-list">
-                        <!-- Les cours de physique seront chargés ici par JavaScript -->
-                    </div>
+                        </div>
                 </section>
                 <section class="resource-category" data-aos="fade-up" data-aos-delay="150">
                     <h2><i class="fas fa-question-circle"></i> Quiz</h2>
@@ -375,7 +382,6 @@
             </main>
         </div>
         
-        <!-- Page Simulation Pendule -->
         <div id="page-simulation-pendule" class="page-view">
              <header class="subject-header"><h1><i class="fas fa-atom" style="transform: rotate(-45deg);"></i>Pendule Simple</h1></header>
             <main class="content-container">
@@ -395,31 +401,26 @@
             </main>
         </div>
 
-        <!-- Page Chimie -->
         <div id="page-chimie" class="page-view">
             <header class="subject-header"><h1><i class="fas fa-flask-vial"></i>Chimie</h1></header>
             <main class="content-container">
                 <section class="resource-category" data-aos="fade-up"><h2><i class="fas fa-book-open"></i> Cours</h2>
                     <div class="resource-list" id="chimie-cours-list">
-                        <!-- Les cours de chimie seront chargés ici par JavaScript -->
-                    </div>
+                        </div>
                 </section>
             </main>
         </div>
 
-        <!-- Page Maths -->
         <div id="page-maths" class="page-view">
             <header class="subject-header"><h1><i class="fas fa-calculator"></i>Maths</h1></header>
             <main class="content-container">
                  <section class="resource-category" data-aos="fade-up"><h2><i class="fas fa-book-open"></i> Cours</h2>
                     <div class="resource-list" id="maths-cours-list">
-                        <!-- Les cours de maths seront chargés ici par JavaScript -->
-                    </div>
+                        </div>
                 </section>
             </main>
         </div>
 
-        <!-- Page Outils -->
         <div id="page-outils" class="page-view">
             <header class="subject-header"><h1><i class="fas fa-wrench"></i>Boîte à Outils</h1></header>
             <main class="content-container">
@@ -445,7 +446,6 @@
             </main>
         </div>
 
-        <!-- Pages Auth -->
         <div id="page-login" class="page-view">
             <header class="subject-header"><h1><i class="fas fa-sign-in-alt"></i> Connexion</h1></header>
             <main class="content-container auth-form-container">
@@ -472,16 +472,38 @@
             </main>
         </div>
         
-        <!-- Page Espace Perso -->
         <div id="page-espace" class="page-view">
             <header class="subject-header"><h1 id="espace-title"><i class="fas fa-user-graduate"></i></h1></header>
             <main class="content-container">
-                 <section class="resource-category" data-aos="fade-up"><h2><i class="fas fa-chart-line"></i> Mon Tableau de Bord</h2><div id="progress-dashboard" class="progress-dashboard"><div class="progress-subject"><h4>Physique</h4><div class="progress-bar-container"><div id="physique-progress-bar" class="progress-bar"></div></div><span id="physique-progress-percentage" class="progress-percentage">0%</span></div><div class="progress-subject"><h4>Chimie</h4><div class="progress-bar-container"><div id="chimie-progress-bar" class="progress-bar"></div></div><span id="chimie-progress-percentage" class="progress-percentage">0%</span></div><div class="progress-subject"><h4>Maths</h4><div class="progress-bar-container"><div id="maths-progress-bar" class="progress-bar"></div></div><span id="maths-progress-percentage" class="progress-percentage">0%</span></div></div></section>
-                 <section class="resource-category" data-aos="fade-up" data-aos-delay="150"><h2><i class="fas fa-tasks"></i> Cours Terminés</h2><p id="progress-message">Cochez les cases des cours pour suivre votre progression.</p><ul id="detailed-progress-list"></ul></section>
+                 <section class="resource-category" data-aos="fade-up">
+                    <h2><i class="fas fa-chart-line"></i> Mon Tableau de Bord</h2>
+                    <div id="progress-dashboard" class="progress-dashboard">
+                        <div class="progress-subject">
+                            <h4>Physique</h4>
+                            <div class="progress-bar-container"><div id="physique-progress-bar" class="progress-bar"></div></div>
+                            <span id="physique-progress-percentage" class="progress-percentage">0%</span>
+                        </div>
+                        <div class="progress-subject">
+                            <h4>Chimie</h4>
+                            <div class="progress-bar-container"><div id="chimie-progress-bar" class="progress-bar"></div></div>
+                            <span id="chimie-progress-percentage" class="progress-percentage">0%</span>
+                        </div>
+                        <div class="progress-subject">
+                            <h4>Maths</h4>
+                            <div class="progress-bar-container"><div id="maths-progress-bar" class="progress-bar"></div></div>
+                            <span id="maths-progress-percentage" class="progress-percentage">0%</span>
+                        </div>
+                    </div>
+                 </section>
+                 <section class="resource-category" data-aos="fade-up" data-aos-delay="150">
+                    <h2><i class="fas fa-tasks"></i> Cours Terminés</h2>
+                    <p id="progress-message">Voici la liste des cours que vous avez marqués comme terminés.</p>
+                    <ul id="detailed-progress-list" style="padding-left: 20px; margin-top: 1rem;">
+                        </ul>
+                 </section>
             </main>
         </div>
 
-        <!-- Page Admin -->
         <div id="page-admin" class="page-view">
             <header class="subject-header"><h1><i class="fas fa-user-shield"></i> Panel Administrateur</h1></header>
             <main class="content-container auth-form-container" style="max-width: 700px;">
@@ -561,6 +583,7 @@
         let simInitialized = false;
         let isDragging = false;
         let currentUserData = {};
+        let allCoursesCache = []; // Pour stocker tous les cours et éviter les appels répétitifs
         const pendulum = { length: 200, bobRadius: 20, angle: Math.PI / 4, angleVelocity: 0, angleAcceleration: 0, gravity: 0.1, damping: 0.998 };
         
         // --- CONFIGURATION FIREBASE ---
@@ -568,7 +591,7 @@
             apiKey: "AIzaSyACfUtMwfs6ikcwcwQg56_6DDdaayXGwUU",
             authDomain: "hub-du-savoir.firebaseapp.com",
             projectId: "hub-du-savoir",
-            storageBucket: "hub-du-savoir.firebasestorage.app", // CORRECTION APPLIQUÉE ICI
+            storageBucket: "hub-du-savoir.appspot.com",
             messagingSenderId: "679336582219",
             appId: "1:679336582219:web:20b548ad757c14e5abc1ce"
         };
@@ -678,23 +701,6 @@
             }, { once: true });
         }
         
-        function updateUIForUser(user, userData) {
-            currentUserData = userData;
-            authLink.classList.add('hidden');
-            espaceLink.classList.remove('hidden');
-            logoutLink.classList.remove('hidden');
-            adminLink.classList.toggle('hidden', !adminUids.includes(user.uid));
-            
-            const espaceTitle = document.getElementById('espace-title');
-            if (espaceTitle) {
-                espaceTitle.innerHTML = `<i class="fas fa-user-graduate"></i> Espace de ${userData.pseudo || 'l\'Utilisateur'}`;
-            }
-
-            espaceLink.innerHTML = `<i class="fas fa-user-circle"></i> ${userData.pseudo || 'Mon Espace'}`;
-            updateProgressDashboard(userData.progress || {});
-            updateCheckboxes(userData.progress || {});
-        }
-
         function updateUIForGuest() {
             currentUserData = {};
             authLink.classList.remove('hidden');
@@ -707,8 +713,9 @@
                 if(container) container.innerHTML = `<p style="opacity: 0.7;">Veuillez vous connecter pour voir les cours.</p>`;
             });
             
-            updateProgressDashboard({});
-            updateCheckboxes({});
+            updateProgressDashboard({}, []); // Pass empty array for courses
+            updateDetailedProgressList({}, []); // Pass empty array for courses
+
             const currentPage = document.querySelector('.page-view.active');
             if (currentPage && (currentPage.id === 'page-espace' || currentPage.id === 'page-admin')) {
                 showPage('page-accueil');
@@ -725,46 +732,113 @@
             }
         }
 
-        async function updateProgressDashboard(progress = {}) {
+        async function getAllCourses() {
+            if (allCoursesCache.length > 0) {
+                return allCoursesCache;
+            }
+            try {
+                const resourcesQuery = query(collection(db, "resources"));
+                const querySnapshot = await getDocs(resourcesQuery);
+                const courses = [];
+                querySnapshot.forEach(doc => {
+                    courses.push({ id: doc.id, ...doc.data() });
+                });
+                allCoursesCache = courses;
+                return allCoursesCache;
+            } catch (error) {
+                console.error("Erreur critique lors de la récupération des cours:", error);
+                return []; 
+            }
+        }
+
+        async function updateProgressDashboard(userProgress, allCourses) {
             const subjects = ['physique', 'chimie', 'maths'];
-            
-            if (!auth.currentUser) {
+            const progressData = userProgress || {};
+
+            if (!allCourses || allCourses.length === 0) {
                 subjects.forEach(subject => {
                     const bar = document.getElementById(`${subject}-progress-bar`);
                     const percDisplay = document.getElementById(`${subject}-progress-percentage`);
-                    if(bar) bar.style.width = `0%`;
-                    if(percDisplay) percDisplay.textContent = `0%`;
+                    if (bar) bar.style.width = '0%';
+                    if (percDisplay) percDisplay.textContent = '0%';
                 });
                 return;
             }
-            
-            for (const subject of subjects) {
-                try {
-                    const q = query(collection(db, "resources"), where("subject", "==", subject));
-                    const querySnapshot = await getDocs(q);
-                    const total = querySnapshot.size;
-                    
-                    if (total === 0) {
-                        const bar = document.getElementById(`${subject}-progress-bar`);
-                        const percDisplay = document.getElementById(`${subject}-progress-percentage`);
-                        if(bar) bar.style.width = '0%';
-                        if(percDisplay) percDisplay.textContent = '0%';
-                        continue;
+
+            const subjectStats = {
+                physique: { total: 0, completed: 0 },
+                chimie: { total: 0, completed: 0 },
+                maths: { total: 0, completed: 0 }
+            };
+
+            allCourses.forEach(course => {
+                if (subjectStats[course.subject]) {
+                    subjectStats[course.subject].total++;
+                    if (progressData[course.id] === true) {
+                        subjectStats[course.subject].completed++;
                     }
-
-                    const completedIds = Object.keys(progress).filter(key => progress[key]);
-                    const completed = completedIds.filter(id => querySnapshot.docs.some(doc => doc.id === id && doc.data().subject === subject)).length;
-
-                    const percentage = Math.round((completed / total) * 100);
-                    
-                    const bar = document.getElementById(`${subject}-progress-bar`);
-                    const percDisplay = document.getElementById(`${subject}-progress-percentage`);
-                    if(bar) bar.style.width = `${percentage}%`;
-                    if(percDisplay) percDisplay.textContent = `${percentage}%`;
-                } catch (error) {
-                    console.error(`Error calculating progress for ${subject}:`, error);
                 }
+            });
+
+            subjects.forEach(subject => {
+                const { total, completed } = subjectStats[subject];
+                const percentage = (total > 0) ? Math.round((completed / total) * 100) : 0;
+                const bar = document.getElementById(`${subject}-progress-bar`);
+                const percDisplay = document.getElementById(`${subject}-progress-percentage`);
+                if (bar) bar.style.width = `${percentage}%`;
+                if (percDisplay) percDisplay.textContent = `${percentage}%`;
+            });
+        }
+
+        function updateDetailedProgressList(userProgress, allCourses) {
+            const container = document.getElementById('detailed-progress-list');
+            if (!container) return;
+            const progressData = userProgress || {};
+            const completedIds = Object.keys(progressData).filter(id => progressData[id] === true);
+
+            if (completedIds.length === 0) {
+                container.innerHTML = '<li style="opacity: 0.7;">Vous n\'avez encore terminé aucun cours.</li>';
+                return;
             }
+
+            const completedCourses = allCourses
+                .filter(course => completedIds.includes(course.id))
+                .sort((a, b) => a.subject.localeCompare(b.subject));
+
+            let html = '';
+            completedCourses.forEach(course => {
+                let icon = 'fa-file-alt';
+                let color = 'var(--text-color)';
+                if (course.subject === 'physique') { icon = 'fa-atom'; color = 'var(--primary-color)'; }
+                if (course.subject === 'chimie') { icon = 'fa-flask-vial'; color = 'var(--secondary-color)'; }
+                if (course.subject === 'maths') { icon = 'fa-calculator'; color = 'var(--maths-color)'; }
+                
+                html += `<li style="list-style: none; margin-bottom: 0.5rem; color: ${color}; font-weight: 500;">
+                           <i class="fas ${icon}" style="margin-right: 12px; font-size: 1.1em;"></i>
+                           ${course.title}
+                         </li>`;
+            });
+            container.innerHTML = html;
+        }
+
+        function updateUIForUser(user, userData) {
+            currentUserData = userData;
+            authLink.classList.add('hidden');
+            espaceLink.classList.remove('hidden');
+            logoutLink.classList.remove('hidden');
+            adminLink.classList.toggle('hidden', !adminUids.includes(user.uid));
+            
+            const espaceTitle = document.getElementById('espace-title');
+            if (espaceTitle) {
+                espaceTitle.innerHTML = `<i class="fas fa-user-graduate"></i> Espace de ${userData.pseudo || 'l\'Utilisateur'}`;
+            }
+
+            espaceLink.innerHTML = `<i class="fas fa-user-circle"></i> ${userData.pseudo || 'Mon Espace'}`;
+            
+            updateProgressDashboard(userData.progress, allCoursesCache);
+            updateDetailedProgressList(userData.progress, allCoursesCache);
+
+            updateCheckboxes(userData.progress || {});
         }
 
 
@@ -879,10 +953,9 @@
             const docId = button.dataset.docId;
             const fileUrl = button.dataset.fileUrl;
             
-            // Une confirmation est fortement recommandée en production
-            // if (!confirm("Êtes-vous sûr de vouloir supprimer ce cours ? Cette action est irréversible.")) {
-            //     return;
-            // }
+            if (!confirm("Êtes-vous sûr de vouloir supprimer ce cours ? Cette action est irréversible.")) {
+                return;
+            }
 
             button.disabled = true;
             button.innerHTML = '<i class="fas fa-spinner fa-spin"></i>';
@@ -938,8 +1011,10 @@
         // --- EVENT LISTENERS & FINAL SETUP ---
         document.addEventListener('DOMContentLoaded', () => {
             initTools(); 
-            onAuthStateChanged(auth, (user) => {
+
+            onAuthStateChanged(auth, async (user) => {
                 if (user) {
+                    await getAllCourses(); 
                     if (unsubscribeFromFirestore) unsubscribeFromFirestore();
                     const userDocRef = doc(db, "users", user.uid);
                     unsubscribeFromFirestore = onSnapshot(userDocRef, (docSnap) => {
@@ -948,6 +1023,7 @@
                         }
                     });
                 } else {
+                    allCoursesCache = []; 
                     updateUIForGuest();
                     if (unsubscribeFromFirestore) unsubscribeFromFirestore();
                 }
@@ -1046,7 +1122,7 @@
                             
                             showMessage('admin', 'Ressource ajoutée avec succès!', 'success');
                             addResourceForm.reset();
-                            loadCoursesForAdmin(); // Recharger la liste après ajout
+                            loadCoursesForAdmin();
                         } catch (error) {
                             console.error("Error adding document to Firestore: ", error);
                             showMessage('admin', `Erreur Firestore: ${error.message}`, 'error');
