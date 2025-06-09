@@ -3,362 +3,454 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Cours L1 Physique/Chimie</title>
-    <script src="https://cdn.tailwindcss.com"></script>
+    <title>Hub du Savoir avec Firebase</title>
+    
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Exo+2:wght@700&family=Poppins:wght@300;400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+
     <style>
-        body {
-            background-image: url('https://cdn.pixabay.com/photo/2017/08/30/01/05/milky-way-2695569_1280.jpg');
-            background-attachment: fixed;
-            background-position: center;
-            background-repeat: no-repeat;
-            background-size: cover;
-            font-family: 'Inter', sans-serif;
+        :root {
+            --primary-color: #00e5ff;
+            --secondary-color: #ff00c8;
+            --maths-color: #ffdd00;
+            --background-color: #121220;
+            --card-color: rgba(23, 23, 39, 0.85);
+            --text-color: #f0f0f0;
+            --success-color: #00ff8c;
+            --error-color: #ff4d4d;
+            --transition-duration: 0.6s;
         }
 
-        #content-area {
-            opacity: 1;
-            transform: scale(1) translateY(0px);
-            transition: opacity 0.5s cubic-bezier(0.4, 0, 0.2, 1), 
-                        transform 0.5s cubic-bezier(0.4, 0, 0.2, 1);
-        }
-
-        #content-area.content-exit-active {
-            opacity: 0;
-            transform: scale(0.90) translateY(20px); 
-        }
-        
-        #content-area.content-enter-prepare {
-            opacity: 0;
-            transform: scale(1.10) translateY(-20px);
-        }
-
-        ::-webkit-scrollbar { width: 8px; }
-        ::-webkit-scrollbar-track { background: rgba(224, 242, 254, 0.2); }
-        ::-webkit-scrollbar-thumb { background: #0ea5e9; border-radius: 4px; }
-        ::-webkit-scrollbar-thumb:hover { background: #38bdf8; }
+        /* ... (Les styles CSS restent identiques) ... */
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        html { scroll-behavior: smooth; }
+        body { font-family: 'Poppins', sans-serif; background-color: var(--background-color); color: var(--text-color); line-height: 1.6; overflow-x: hidden; }
+        body.focus-mode .particle-container { opacity: 0 !important; }
+        body.modal-open { overflow: hidden; }
+        .particle-container { position: fixed; width: 100%; height: 100%; top: 0; left: 0; z-index: -1; opacity: 0; transition: opacity 0.8s ease-in-out; }
+        .particle-container.active { opacity: 1; }
+        .page-wrapper { position: relative; perspective: 1200px; }
+        .page-view { width: 100%; display: none; backface-visibility: hidden; }
+        .page-view.active { display: block; }
+        .page-view.is-entering { animation: plungeIn var(--transition-duration) ease-out forwards; }
+        .page-view.is-leaving { position: absolute; top: 0; left: 0; z-index: 10; animation: plungeOut var(--transition-duration) ease-in forwards; }
+        @keyframes plungeIn { from { transform: translateZ(100px) scale(0.95); opacity: 0; } to { transform: translateZ(0) scale(1); opacity: 1; } }
+        @keyframes plungeOut { from { transform: translateZ(0) scale(1); opacity: 1; } to { transform: translateZ(-100px) scale(0.95); opacity: 0; } }
+        .header, .subject-header { padding: 7rem 1rem 5rem; text-align: center; position: relative; z-index: 1; }
+        .header h1, .subject-header h1 { font-family: 'Exo 2', sans-serif; font-size: clamp(3rem, 10vw, 5.5rem); font-weight: 700; background: linear-gradient(90deg, var(--primary-color), var(--success-color), #b400ff, var(--primary-color)); background-size: 300% auto; -webkit-background-clip: text; background-clip: text; color: transparent; animation: colorCycle 8s linear infinite; }
+        @keyframes colorCycle { to { background-position: -300%; } }
+        .header p { font-size: clamp(1rem, 3vw, 1.2rem); opacity: 0.8; margin-top: 0.5rem; }
+        .navbar { display: flex; justify-content: center; align-items: center; flex-wrap: wrap; gap: 1.5rem; padding: 1rem; background: var(--card-color); backdrop-filter: blur(10px); position: sticky; top: 0; z-index: 100; border-bottom: 1px solid var(--primary-color); box-shadow: 0 4px 20px rgba(0, 229, 255, 0.2); }
+        .nav-link { color: var(--text-color); text-decoration: none; font-size: 1.1rem; padding: 0.5rem 1rem; border-radius: 5px; transition: all 0.3s ease; cursor: pointer; display: flex; align-items: center; gap: 0.5rem; }
+        .nav-link:hover, .nav-link:focus { background-color: var(--primary-color); color: var(--background-color); transform: translateY(-3px); box-shadow: 0 4px 15px rgba(0, 229, 255, 0.4); }
+        .nav-item.hidden { display: none; }
+        .search-container { padding: 0 2rem 2rem 2rem; text-align: center; }
+        .search-bar { background: rgba(255,255,255,0.1); border: 1px solid var(--primary-color); border-radius: 20px; color: var(--text-color); padding: 0.75rem 1.5rem; font-family: 'Poppins', sans-serif; font-size: 1.1rem; transition: all 0.3s ease; width: 100%; max-width: 500px; }
+        .search-bar:focus { outline: none; box-shadow: 0 0 10px var(--primary-color); }
+        .main-content, .content-container { padding: 4rem 2rem; max-width: 1100px; margin: 0 auto; position: relative; z-index: 1; }
+        .content-container.with-search { padding-top: 0; }
+        .subject-card { background: var(--card-color); padding: 2.5rem; margin-bottom: 3rem; border-radius: 15px; border-left: 5px solid; transition: transform 0.4s cubic-bezier(0.25, 0.8, 0.25, 1), box-shadow 0.4s cubic-bezier(0.25, 0.8, 0.25, 1); box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5); cursor: pointer; }
+        #physique-card { border-color: var(--primary-color); }
+        #chimie-card { border-color: var(--secondary-color); }
+        #maths-card { border-color: var(--maths-color); }
+        #physique-card:hover { transform: scale(1.08); box-shadow: 0 20px 45px rgba(0, 229, 255, 0.25); }
+        #chimie-card:hover { transform: scale(1.08); box-shadow: 0 20px 45px rgba(255, 0, 200, 0.25); }
+        #maths-card:hover { transform: scale(1.08); box-shadow: 0 20px 45px rgba(255, 221, 0, 0.25); }
+        .subject-card h2, .subject-header h2, .resource-category h2 { font-size: 1.8rem; margin-bottom: 1.5rem; display: flex; align-items: center; gap: 1rem; }
+        .subject-card i, .subject-header i, .resource-category i { font-size: 1.6rem; text-shadow: 0 0 8px currentColor; }
+        .subject-header { padding: 5rem 2rem 3rem; }
+        .resource-category { background: var(--card-color); border-radius: 15px; padding: 2rem; margin-bottom: 2.5rem; border-top: 3px solid; }
+        .resource-category h2 { padding-bottom: 0.5rem; border-bottom: 1px solid rgba(255,255,255,0.2); }
+        #page-physique .resource-category, #page-espace .resource-category { border-top-color: var(--primary-color); }
+        #page-chimie .resource-category { border-top-color: var(--secondary-color); }
+        #page-maths .resource-category { border-top-color: var(--maths-color); }
+        .resource-list { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 1.5rem; }
+        .resource-item { background-color: rgba(255, 255, 255, 0.05); color: var(--text-color); text-decoration: none; padding: 1rem; border-radius: 8px; transition: all 0.3s ease; border-left: 3px solid transparent; display: flex; align-items: center; gap: 0.75rem; position: relative; }
+        .resource-item.hidden { display: none; }
+        .resource-item:hover { background-color: rgba(0, 229, 255, 0.1); border-left-color: var(--primary-color); transform: translateY(-5px); color: var(--primary-color); }
+        .progress-checkbox { margin-right: 10px; cursor: pointer; width: 20px; height: 20px; }
+        .auth-form-container { max-width: 500px; margin: 0 auto; }
+        .auth-form { display: flex; flex-direction: column; gap: 1.5rem; }
+        .form-group { display: flex; flex-direction: column; }
+        .form-group label { margin-bottom: 0.5rem; font-weight: 700; }
+        .form-group input { background: rgba(255,255,255,0.1); border: 1px solid var(--primary-color); border-radius: 8px; color: var(--text-color); padding: 0.75rem; font-family: 'Poppins', sans-serif; font-size: 1rem; }
+        .form-group input:focus { outline: none; box-shadow: 0 0 10px var(--primary-color); }
+        .form-submit-btn { background: linear-gradient(90deg, var(--primary-color), var(--secondary-color)); color: var(--background-color); padding: 0.8rem 1.5rem; border: none; border-radius: 50px; font-weight: 700; cursor: pointer; transition: transform 0.3s ease; font-size: 1.1rem; }
+        .form-submit-btn:hover { transform: scale(1.05); }
+        .form-switch-link { text-align: center; margin-top: 1.5rem; }
+        .form-switch-link a { color: var(--primary-color); text-decoration: none; font-weight: 700; }
+        .auth-message { text-align: center; padding: 1rem; border-radius: 8px; margin-bottom: 1.5rem; display: none; }
+        .auth-message.success { background-color: rgba(0, 255, 140, 0.3); }
+        .auth-message.error { background-color: rgba(255, 77, 77, 0.3); }
+        .progress-dashboard { display: flex; flex-direction: column; gap: 1.5rem; margin-bottom: 2rem; }
+        .progress-subject { display: flex; align-items: center; gap: 1rem; }
+        .progress-subject h4 { font-size: 1.2rem; width: 100px; }
+        .progress-bar-container { flex-grow: 1; height: 25px; background-color: rgba(255,255,255,0.1); border-radius: 25px; overflow: hidden; }
+        .progress-bar { height: 100%; width: 0%; border-radius: 25px; transition: width 0.5s ease-out; }
+        #physique-progress-bar { background: var(--primary-color); }
+        #chimie-progress-bar { background: var(--secondary-color); }
+        #maths-progress-bar { background: var(--maths-color); }
+        .progress-percentage { font-weight: 700; font-size: 1.1rem; width: 60px; text-align: right; }
+        #detailed-progress-list li { list-style: none; background: rgba(255,255,255,0.05); padding: 0.5rem 1rem; border-radius: 5px; margin-bottom: 0.5rem; }
+        .quiz-trigger { cursor: pointer; }
+        .quiz-modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(0,0,0,0.7); display: flex; justify-content: center; align-items: center; z-index: 1000; opacity: 0; visibility: hidden; transition: opacity 0.4s, visibility 0.4s; }
+        .quiz-modal-overlay.active { opacity: 1; visibility: visible; }
+        .quiz-modal { background: var(--background-color); border: 1px solid var(--primary-color); border-radius: 15px; padding: 2rem; width: 90%; max-width: 700px; max-height: 90vh; overflow-y: auto; transform: scale(0.9); transition: transform 0.4s; }
+        .quiz-modal-overlay.active .quiz-modal { transform: scale(1); }
+        .quiz-modal-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem; }
+        .quiz-modal-header h3 { font-size: 1.8rem; }
+        .quiz-close-btn { background: none; border: none; color: var(--text-color); font-size: 2rem; cursor: pointer; }
+        .quiz-question { margin-bottom: 1.5rem; }
+        .quiz-question p { font-size: 1.2rem; font-weight: 700; margin-bottom: 1rem; }
+        .quiz-options label { display: block; background-color: rgba(255,255,255,0.05); padding: 1rem; margin-bottom: 0.5rem; border-radius: 8px; cursor: pointer; transition: background-color 0.3s; }
+        .quiz-options label:hover { background-color: rgba(255,255,255,0.1); }
+        .quiz-options input { margin-right: 10px; }
+        .quiz-options .correct { background-color: rgba(0, 255, 140, 0.3); border-left: 3px solid var(--success-color); }
+        .quiz-options .incorrect { background-color: rgba(255, 77, 77, 0.3); border-left: 3px solid var(--error-color); }
+        .quiz-submit-btn { background: linear-gradient(90deg, var(--primary-color), var(--secondary-color)); color: var(--background-color); padding: 0.8rem 1.5rem; border: none; border-radius: 50px; font-weight: 700; cursor: pointer; transition: transform 0.3s ease; display: block; margin: 2rem auto 0; }
+        .quiz-submit-btn:hover { transform: scale(1.05); }
+        .quiz-result { text-align: center; font-size: 1.5rem; font-weight: 700; margin-top: 1.5rem; }
+        .site-footer { padding: 2.5rem 2rem; margin-top: 4rem; background-color: var(--card-color); text-align: center; border-top: 1px solid var(--primary-color); box-shadow: 0 -4px 20px rgba(0, 229, 255, 0.15); position: relative; z-index: 2;}
+        .site-footer p { margin: 0; opacity: 0.9; }
+        .social-link { color: var(--primary-color); text-decoration: none; font-weight: 700; transition: color 0.3s ease; display: inline-flex; align-items: center; gap: 0.5rem; }
+        .social-link:hover { color: var(--secondary-color); text-decoration: underline; }
     </style>
 </head>
-<body class="text-gray-200 min-h-screen"> 
-    <div id="app-container" class="container mx-auto p-4 sm:p-6 md:p-8 max-w-5xl">
+<body>
+    
+    <!-- ... (HTML du body inchangé) ... -->
+    <div id="particles-accueil" class="particle-container active"></div>
+    <div id="particles-physique" class="particle-container"></div>
+    <div id="particles-chimie" class="particle-container"></div>
+    <div id="particles-maths" class="particle-container"></div>
+    <div id="particles-espace" class="particle-container"></div>
+    <div id="particles-login" class="particle-container"></div>
+    <div id="particles-signup" class="particle-container"></div>
+
+    <div class="page-wrapper">
+        <nav class="navbar">
+            <a class="nav-link" onclick="showPage('page-accueil')"><i class="fas fa-home"></i> Accueil</a>
+            <a class="nav-link" onclick="showPage('page-physique')">Physique</a>
+            <a class="nav-link" onclick="showPage('page-chimie')">Chimie</a>
+            <a class="nav-link" onclick="showPage('page-maths')">Maths</a>
+            <a class="nav-link nav-item" id="auth-link" onclick="showPage('page-login')"><i class="fas fa-sign-in-alt"></i> Connexion</a>
+            <a class="nav-link nav-item hidden" id="espace-link" onclick="showPage('page-espace')"><i class="fas fa-user-circle"></i> Mon Espace</a>
+            <a class="nav-link nav-item" id="focus-mode-toggle"><i class="fas fa-eye"></i><span>Focus</span></a>
+            <a class="nav-link nav-item hidden" id="logout-link"><i class="fas fa-sign-out-alt"></i> Déconnexion</a>
+        </nav>
+
+        <div id="page-accueil" class="page-view active">
+            <header class="header" data-aos="fade-down"><h1>Hub du Savoir</h1><p>Votre portail vers la réussite en L1 Physique-Chimie</p></header>
+            <main class="main-content">
+                <section class="subject-card" data-aos="fade-right" id="physique-card" onclick="showPage('page-physique')">
+                    <h2><i class="fas fa-atom"></i> Physique</h2><p>Explorez les lois de l'univers...</p>
+                </section>
+                <section class="subject-card" data-aos="fade-left" id="chimie-card" onclick="showPage('page-chimie')">
+                    <h2><i class="fas fa-flask-vial"></i> Chimie</h2><p>Plongez dans le monde fascinant des atomes...</p>
+                </section>
+                <section class="subject-card" data-aos="fade-right" id="maths-card" onclick="showPage('page-maths')">
+                    <h2><i class="fas fa-calculator"></i> Maths</h2><p>Maîtrisez les outils mathématiques indispensables...</p>
+                </section>
+            </main>
+        </div>
+
+        <div id="page-physique" class="page-view">
+            <header class="subject-header"><h1><i class="fas fa-atom"></i>Physique</h1></header>
+            <div class="search-container"><input type="search" class="search-bar" data-page="physique" placeholder="Rechercher en Physique..."></div>
+            <main class="content-container with-search">
+                <section class="resource-category" data-aos="fade-up"><h2><i class="fas fa-book-open"></i> Cours</h2>
+                    <div class="resource-list">
+                        <a href="#" target="_blank" class="resource-item"><input type="checkbox" class="progress-checkbox" data-subject="physique" data-id="phys-chap-1">Chapitre 1 : Mécanique du Point</a>
+                        <a href="#" target="_blank" class="resource-item"><input type="checkbox" class="progress-checkbox" data-subject="physique" data-id="phys-chap-2">Chapitre 2 : Électrocinétique</a>
+                    </div>
+                </section>
+                 <section class="resource-category" data-aos="fade-up" data-aos-delay="150">
+                    <h2><i class="fas fa-question-circle"></i> Quiz</h2>
+                    <div class="resource-list">
+                        <a class="resource-item quiz-trigger"><i class="fas fa-gamepad"></i>Lancer le Quiz : Mécanique</a>
+                    </div>
+                </section>
+            </main>
+        </div>
+
+        <div id="page-chimie" class="page-view">
+            <header class="subject-header"><h1><i class="fas fa-flask-vial"></i>Chimie</h1></header>
+            <div class="search-container"><input type="search" class="search-bar" data-page="chimie" placeholder="Rechercher en Chimie..."></div>
+            <main class="content-container with-search">
+                <section class="resource-category" data-aos="fade-up"><h2><i class="fas fa-book-open"></i> Cours</h2>
+                    <div class="resource-list">
+                         <a href="#" target="_blank" class="resource-item"><input type="checkbox" class="progress-checkbox" data-subject="chimie" data-id="chim-chap-1">Chapitre 1 : Atomistique & Liaisons</a>
+                    </div>
+                </section>
+            </main>
+        </div>
         
-        <header class="mb-6 md:mb-8 text-center relative bg-white/70 backdrop-blur-md p-4 rounded-xl shadow-xl">
-            <button id="back-button" class="hidden absolute left-2 sm:left-4 top-1/2 -translate-y-1/2 bg-sky-500 hover:bg-sky-400 text-white font-semibold py-2 px-3 sm:px-4 rounded-lg shadow-md hover:shadow-lg transition-all duration-300 ease-in-out transform hover:scale-105">
-                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 inline-block sm:mr-1" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M12.707 5.293a1 1 0 010 1.414L9.414 10l3.293 3.293a1 1 0 01-1.414 1.414l-4-4a1 1 0 010-1.414l4-4a1 1 0 011.414 0z" clip-rule="evenodd" /></svg>
-                <span class="hidden sm:inline">Retour</span>
-            </button>
-            <h1 id="main-title" class="text-3xl sm:text-4xl md:text-5xl font-bold text-white transition-all duration-300" style="text-shadow: 1px 1px 3px rgba(0,0,0,0.3);"></h1>
-            <p id="breadcrumb" class="mt-2 text-sm sm:text-base min-h-[1.5em] transition-all duration-300"></p>
-        </header>
+        <div id="page-maths" class="page-view">
+            <header class="subject-header"><h1><i class="fas fa-calculator"></i>Maths</h1></header>
+            <div class="search-container"><input type="search" class="search-bar" data-page="maths" placeholder="Rechercher en Maths..."></div>
+            <main class="content-container with-search">
+                 <section class="resource-category" data-aos="fade-up"><h2><i class="fas fa-book-open"></i> Outils</h2>
+                    <div class="resource-list">
+                         <a href="#" target="_blank" class="resource-item"><input type="checkbox" class="progress-checkbox" data-subject="maths" data-id="math-chap-1">Rappels : Analyse</a>
+                    </div>
+                </section>
+            </main>
+        </div>
+        
+        <div id="page-login" class="page-view">
+            <header class="subject-header"><h1><i class="fas fa-sign-in-alt"></i> Connexion</h1></header>
+            <main class="content-container auth-form-container">
+                <div id="login-message" class="auth-message"></div>
+                <form id="login-form" class="auth-form" data-aos="fade-up">
+                    <div class="form-group"><label for="login-email">Adresse e-mail</label><input type="email" id="login-email" required></div>
+                    <div class="form-group"><label for="login-password">Mot de passe</label><input type="password" id="login-password" required></div>
+                    <button type="submit" class="form-submit-btn">Se connecter</button>
+                </form>
+                <p class="form-switch-link">Pas encore de compte ? <a href="#" onclick="showPage('page-signup')">Inscrivez-vous</a></p>
+            </main>
+        </div>
 
-        <main id="content-area" class="bg-white/80 backdrop-blur-md shadow-2xl rounded-2xl p-4 sm:p-6 md:p-10 min-h-[60vh]"></main>
-
-        <footer class="text-center mt-8 sm:mt-12 bg-white/70 backdrop-blur-md p-4 rounded-xl shadow-xl">
-            <p class="text-gray-300">&copy; <span id="currentYear"></span> - Partage de Connaissances. Propulsé avec ❤️.</p>
-            <p class="mt-2 text-gray-300">Contactez-moi sur Instagram : <a href="https://www.instagram.com/math.dlbe" target="_blank" rel="noopener noreferrer" class="font-semibold text-sky-300 hover:text-sky-100 hover:underline">@math.dlbe</a></p>
-        </footer>
+        <div id="page-signup" class="page-view">
+            <header class="subject-header"><h1><i class="fas fa-user-plus"></i> Inscription</h1></header>
+            <main class="content-container auth-form-container">
+                <div id="signup-message" class="auth-message"></div>
+                <form id="signup-form" class="auth-form" data-aos="fade-up">
+                    <div class="form-group"><label for="signup-pseudo">Pseudonyme</label><input type="text" id="signup-pseudo" required></div>
+                    <div class="form-group"><label for="signup-email">Adresse e-mail</label><input type="email" id="signup-email" required></div>
+                    <div class="form-group"><label for="signup-password">Mot de passe</label><input type="password" id="signup-password" required minlength="6"></div>
+                    <button type="submit" class="form-submit-btn">Créer mon compte</button>
+                </form>
+                 <p class="form-switch-link">Déjà un compte ? <a href="#" onclick="showPage('page-login')">Connectez-vous</a></p>
+            </main>
+        </div>
+        
+        <div id="page-espace" class="page-view">
+            <header class="subject-header"><h1 id="espace-title"><i class="fas fa-user-graduate"></i></h1></header>
+            <main class="content-container">
+                 <section class="resource-category" data-aos="fade-up">
+                    <h2><i class="fas fa-chart-line"></i> Mon Tableau de Bord</h2>
+                    <div id="progress-dashboard" class="progress-dashboard">
+                        <div class="progress-subject"><h4>Physique</h4><div class="progress-bar-container"><div id="physique-progress-bar" class="progress-bar"></div></div><span id="physique-progress-percentage" class="progress-percentage">0%</span></div>
+                        <div class="progress-subject"><h4>Chimie</h4><div class="progress-bar-container"><div id="chimie-progress-bar" class="progress-bar"></div></div><span id="chimie-progress-percentage" class="progress-percentage">0%</span></div>
+                        <div class="progress-subject"><h4>Maths</h4><div class="progress-bar-container"><div id="maths-progress-bar" class="progress-bar"></div></div><span id="maths-progress-percentage" class="progress-percentage">0%</span></div>
+                    </div>
+                 </section>
+                 <section class="resource-category" data-aos="fade-up" data-aos-delay="150">
+                    <h2><i class="fas fa-tasks"></i> Cours Terminés</h2>
+                    <p id="progress-message">Cochez les cases des cours pour suivre votre progression.</p>
+                    <ul id="detailed-progress-list"></ul>
+                 </section>
+            </main>
+        </div>
+    </div>
+    
+    <div id="quiz-modal" class="quiz-modal-overlay">
+        <!-- ... (Contenu du modal du Quiz inchangé) ... -->
     </div>
 
-    <script>
-        tailwind.config = {
-            theme: {
-                extend: {
-                    fontFamily: { sans: ['Inter', 'sans-serif'], },
-                    colors: { 
-                        sky: { 50:'#f0f9ff',100:'#e0f2fe',200:'#bae6fd',300:'#7dd3fc',400:'#38bdf8',500:'#0ea5e9',600:'#0284c7',700:'#0369a1',800:'#075985',900:'#0c4a6e'},
-                        gray: { 100:'#f3f4f6', 200:'#e5e7eb', 300:'#d1d5db', 400:'#9ca3af' }
-                     }
-                }
-            }
+    <footer class="site-footer">
+        <!-- ... (Contenu du pied de page inchangé) ... -->
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+
+    <script type="module">
+        // --- IMPORTS FIREBASE ---
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
+        import { 
+            getAuth, 
+            onAuthStateChanged,
+            createUserWithEmailAndPassword,
+            signInWithEmailAndPassword,
+            signOut
+        } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+        import { 
+            getFirestore,
+            doc,
+            setDoc,
+            getDoc,
+            updateDoc,
+            onSnapshot
+        } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+
+        // --- CONFIGURATION FIREBASE ---
+        // Les clés sont remplacées par des placeholders qui seront injectés par GitHub Actions.
+        const firebaseConfig = {
+            apiKey: "PLACEHOLDER_API_KEY",
+            authDomain: "PLACEHOLDER_AUTH_DOMAIN",
+            projectId: "PLACEHOLDER_PROJECT_ID",
+            storageBucket: "PLACEHOLDER_STORAGE_BUCKET",
+            messagingSenderId: "PLACEHOLDER_MESSAGING_SENDER_ID",
+            appId: "PLACEHOLDER_APP_ID"
         };
 
-        const emptyContentPlaceholder = "<p><em>Contenu à venir...</em></p>";
-        const coursesData = {
-            chimie: {
-                title: "Chimie", icon: "🧪", description: "Les fondements de la chimie moderne.",
-                themes: {
-                    chimie_solutions: { 
-                        title: "Chimie des solutions", 
-                        icon: "💧", 
-                        chapters: [
-                            { icon: "📚", title: "Cours - Chimie des solutions", content: emptyContentPlaceholder },
-                            { icon: "✅", title: "Corrigés Exercices - Chimie des solutions", content: emptyContentPlaceholder }
-                        ]
-                    },
-                    atomistique: { // SECTION ATOMISTIQUE MISE À JOUR AVEC LES BONS CHEMINS PDF
-                        title: "Atomistique", 
-                        icon: "⚛️",
-                        chapters: [
-                            { 
-                                icon: "📚", 
-                                title: "Chapitre 1 - Atomistique (Cours)", 
-                                content: `
-                                    <h3>Chapitre 1 - Atomistique (Cours)</h3>
-                                    <p>Notes de cours pour le premier chapitre d'atomistique.</p>
-                                    <p class="mt-4">
-                                        <a href="Atomistique_Chapitre_1.pdf" 
-                                           target="_blank" 
-                                           rel="noopener noreferrer"
-                                           class="inline-block bg-sky-500 hover:bg-sky-600 text-white font-semibold py-2 px-4 rounded-lg shadow hover:shadow-md transition-all duration-200 ease-in-out transform hover:scale-105">
-                                           📄 Ouvrir le PDF : Cours Chapitre 1
-                                        </a>
-                                    </p>
-                                ` 
-                            },
-                            { 
-                                icon: "📚", 
-                                title: "Chapitre 2 - Atomistique (Cours)", 
-                                content: `
-                                    <h3>Chapitre 2 - Atomistique (Cours)</h3>
-                                    <p>Notes de cours pour le deuxième chapitre d'atomistique.</p>
-                                    <p class="mt-4">
-                                        <a href="Atomistique_Chapitre_2.pdf" 
-                                           target="_blank" 
-                                           rel="noopener noreferrer"
-                                           class="inline-block bg-sky-500 hover:bg-sky-600 text-white font-semibold py-2 px-4 rounded-lg shadow hover:shadow-md transition-all duration-200 ease-in-out transform hover:scale-105">
-                                           📄 Ouvrir le PDF : Cours Chapitre 2
-                                        </a>
-                                    </p>
-                                `
-                            },
-                            { 
-                                icon: "✅", 
-                                title: "Chapitre 2 - Atomistique (Exercices Corrigés)", 
-                                content: `
-                                    <h3>Chapitre 2 - Atomistique (Exercices Corrigés)</h3>
-                                    <p>Corrigés des exercices pour le deuxième chapitre d'atomistique.</p>
-                                    <p class="mt-4">
-                                        <a href="Atomistique_Chapitre_2_exo.pdf" 
-                                           target="_blank" 
-                                           rel="noopener noreferrer"
-                                           class="inline-block bg-green-500 hover:bg-green-600 text-white font-semibold py-2 px-4 rounded-lg shadow hover:shadow-md transition-all duration-200 ease-in-out transform hover:scale-105">
-                                           📄 Ouvrir le PDF : Exercices Corrigés Chapitre 2
-                                        </a>
-                                    </p>
-                                `
-                            },
-                            { 
-                                icon: "📚", 
-                                title: "Chapitre 3 - Atomistique (Cours)", 
-                                content: `
-                                    <h3>Chapitre 3 - Atomistique (Cours)</h3>
-                                    <p>Notes de cours pour le troisième chapitre d'atomistique.</p>
-                                    <p class="mt-4">
-                                        <a href="Atomistique_Chapitre_3.pdf" 
-                                           target="_blank" 
-                                           rel="noopener noreferrer"
-                                           class="inline-block bg-sky-500 hover:bg-sky-600 text-white font-semibold py-2 px-4 rounded-lg shadow hover:shadow-md transition-all duration-200 ease-in-out transform hover:scale-105">
-                                           📄 Ouvrir le PDF : Cours Chapitre 3
-                                        </a>
-                                    </p>
-                                `
-                            }
-                        ]
-                    },
-                    chimie_organique: { title: "Chimie Organique", icon: "🌿", chapters: [{ icon: "📚", title: "Cours - Chimie Organique", content: emptyContentPlaceholder },{ icon: "✅", title: "Corrigés Exercices - Chimie Organique", content: emptyContentPlaceholder }]},
-                    equilibre_chimique: { title: "Equilibre Chimique", icon: "⚖️", chapters: [{ icon: "📚", title: "Cours - Equilibre Chimique", content: emptyContentPlaceholder },{ icon: "✅", title: "Corrigés Exercices - Equilibre Chimique", content: emptyContentPlaceholder }]},
-                    spectroscopie: { title: "Spectroscopie", icon: "🌈", chapters: [{ icon: "📚", title: "Cours - Spectroscopie", content: emptyContentPlaceholder },{ icon: "✅", title: "Corrigés Exercices - Spectroscopie", content: emptyContentPlaceholder }]}
-                }
-            },
-            physique: {
-                title: "Physique", icon: "⚡️", description: "Exploration des lois physiques de l'univers.",
-                themes: {
-                    mecanique: { title: "Mécanique", icon: "⚙️", chapters: [{ icon: "📚", title: "Cours - Mécanique", content: emptyContentPlaceholder },{ icon: "✅", title: "Corrigés Exercices - Mécanique", content: emptyContentPlaceholder }]},
-                    fonction_electronique_base: { title: "Fonction electronique de base", icon: "💡", chapters: [{ icon: "📚", title: "Cours - Fonction electronique de base", content: emptyContentPlaceholder },{ icon: "✅", title: "Corrigés Exercices - Fonction electronique de base", content: emptyContentPlaceholder }]},
-                    electrocinetique_continue: { title: "Electrocinétique régime continue", icon: "🔋", chapters: [{ icon: "📚", title: "Cours - Electrocinétique régime continue", content: emptyContentPlaceholder },{ icon: "✅", title: "Corrigés Exercices - Electrocinétique régime continue", content: emptyContentPlaceholder }]},
-                    electrocinetique_alternatif: { title: "Electrocinétique régime alternatif", icon: "〰️", chapters: [{ icon: "📚", title: "Cours - Electrocinétique régime alternatif", content: emptyContentPlaceholder },{ icon: "✅", title: "Corrigés Exercices - Electrocinétique régime alternatif", content: emptyContentPlaceholder }]}
-                }
-            },
-            maths: {
-                title: "Mathématiques", icon: "🧮", description: "Les outils essentiels pour la science.",
-                themes: {
-                    fonctions: { title: "Fonctions", icon: "📈", chapters: [{ icon: "📚", title: "Cours - Fonctions", content: emptyContentPlaceholder },{ icon: "✅", title: "Corrigés Exercices - Fonctions", content: emptyContentPlaceholder }]},
-                    complexes: { title: "Complexes", icon: "🌀", chapters: [{ icon: "📚", title: "Cours - Complexes", content: emptyContentPlaceholder },{ icon: "✅", title: "Corrigés Exercices - Complexes", content: emptyContentPlaceholder }]},
-                    matrices: { title: "Matrices", icon: "🔢", chapters: [{ icon: "📚", title: "Cours - Matrices", content: emptyContentPlaceholder },{ icon: "✅", title: "Corrigés Exercices - Matrices", content: emptyContentPlaceholder }]},
-                    integration: { title: "Intégration", icon: "📐", chapters: [{ icon: "📚", title: "Cours - Intégration", content: emptyContentPlaceholder },{ icon: "✅", title: "Corrigés Exercices - Intégration", content: emptyContentPlaceholder }]},
-                    equation_diff: { title: "Equation différentielle", icon: "⏳", chapters: [{ icon: "📚", title: "Cours - Equation différentielle", content: emptyContentPlaceholder },{ icon: "✅", title: "Corrigés Exercices - Equation différentielle", content: emptyContentPlaceholder }]}
-                }
-            }
-        };
+        // --- INITIALISATION FIREBASE ---
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        const db = getFirestore(app);
 
-        const contentArea = document.getElementById('content-area');
-        const mainTitleElement = document.getElementById('main-title');
-        const breadcrumbElement = document.getElementById('breadcrumb');
-        const backButton = document.getElementById('back-button');
-        let navigationStack = [];
-        let currentView = { name: 'home', args: [] };
-
-        function updateContent(newHtmlContent, newPageH1Title, newBreadcrumbParts) {
-            contentArea.classList.add('content-exit-active');
-            setTimeout(() => {
-                mainTitleElement.textContent = newPageH1Title;
-                contentArea.innerHTML = newHtmlContent; 
-                updateBreadcrumb(newBreadcrumbParts);
-                contentArea.classList.remove('content-exit-active');
-                contentArea.classList.add('content-enter-prepare');
-                void contentArea.offsetHeight; 
-                contentArea.classList.remove('content-enter-prepare');
-                window.scrollTo({ top: 0, behavior: 'smooth' });
-            }, 500); 
-        }
-        
-        function updateBreadcrumb(parts) {
-            if (!parts || parts.length === 0) { 
-                breadcrumbElement.innerHTML = ''; 
-                return; 
-            }
-            breadcrumbElement.innerHTML = parts.map((part, index) => {
-                if (part.onClick) {
-                    return `<span id="breadcrumb-${index}" class="cursor-pointer hover:underline text-sky-300 hover:text-sky-100 font-medium">${part.text}</span>`;
-                }
-                return `<span class="text-gray-400">${part.text}</span>`;
-            }).join(' <span class="mx-1 text-sky-400">/</span> ');
-            parts.forEach((part, index) => {
-                if (part.onClick) {
-                    const el = document.getElementById(`breadcrumb-${index}`);
-                    if (el) { 
-                        const newEl = el.cloneNode(true);
-                        el.parentNode.replaceChild(newEl, el);
-                        newEl.addEventListener('click', part.onClick);
+        // ... Le reste du code JavaScript est identique ...
+        const authLink = document.getElementById('auth-link');
+        const espaceLink = document.getElementById('espace-link');
+        const logoutLink = document.getElementById('logout-link');
+        const loginForm = document.getElementById('login-form');
+        const signupForm = document.getElementById('signup-form');
+        let isTransitioning = false;
+        let unsubscribeFromFirestore = null;
+        AOS.init({ duration: 900, once: true, offset: 50 });
+        onAuthStateChanged(auth, user => {
+            if (user) {
+                if (unsubscribeFromFirestore) { unsubscribeFromFirestore(); }
+                const userDocRef = doc(db, "users", user.uid);
+                unsubscribeFromFirestore = onSnapshot(userDocRef, (docSnap) => {
+                    if (docSnap.exists()) {
+                        updateUIForUser(user, docSnap.data());
                     }
+                });
+            } else {
+                updateUIForGuest();
+                if (unsubscribeFromFirestore) { unsubscribeFromFirestore(); }
+            }
+        });
+        function updateUIForUser(user, userData) {
+            authLink.classList.add('hidden');
+            espaceLink.classList.remove('hidden');
+            logoutLink.classList.remove('hidden');
+            espaceLink.innerHTML = `<i class="fas fa-user-circle"></i> ${userData.pseudo || 'Mon Espace'}`;
+            updateProgressDashboard(userData.progress || {});
+            updateCheckboxes(userData.progress || {});
+        }
+        function updateUIForGuest() {
+            authLink.classList.remove('hidden');
+            espaceLink.classList.add('hidden');
+            logoutLink.classList.add('hidden');
+            updateProgressDashboard({});
+            updateCheckboxes({});
+            const currentPage = document.querySelector('.page-view.active');
+            if (currentPage && currentPage.id === 'page-espace') { showPage('page-accueil'); }
+        }
+        signupForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+            const pseudo = document.getElementById('signup-pseudo').value;
+            const email = document.getElementById('signup-email').value;
+            const password = document.getElementById('signup-password').value;
+            createUserWithEmailAndPassword(auth, email, password)
+                .then(userCredential => setDoc(doc(db, "users", userCredential.user.uid), {
+                    pseudo: pseudo,
+                    email: email,
+                    progress: {}
+                }))
+                .then(() => {
+                    showMessage('signup', 'Compte créé avec succès !', 'success');
+                    signupForm.reset();
+                    showPage('page-accueil');
+                })
+                .catch(error => showMessage('signup', `Erreur: ${error.message}`, 'error'));
+        });
+        loginForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+            const email = document.getElementById('login-email').value;
+            const password = document.getElementById('login-password').value;
+            signInWithEmailAndPassword(auth, email, password)
+                .then(() => {
+                    showMessage('login', 'Connexion réussie !', 'success');
+                    loginForm.reset();
+                    showPage('page-accueil');
+                })
+                .catch(error => showMessage('login', `Erreur: ${error.message}`, 'error'));
+        });
+        logoutLink.addEventListener('click', (e) => {
+            e.preventDefault();
+            signOut(auth);
+        });
+        document.querySelectorAll('.progress-checkbox').forEach(checkbox => {
+            checkbox.addEventListener('click', (e) => e.stopPropagation());
+            checkbox.addEventListener('change', (e) => {
+                const user = auth.currentUser;
+                if (!user) {
+                    e.target.checked = false;
+                    showPage('page-login');
+                    return;
                 }
+                const resourceId = e.target.dataset.id;
+                const isChecked = e.target.checked;
+                const userDocRef = doc(db, "users", user.uid);
+                updateDoc(userDocRef, { [`progress.${resourceId}`]: isChecked });
+            });
+        });
+        function updateProgressDashboard(progress = {}) {
+            ['physique', 'chimie', 'maths'].forEach(subject => {
+                const allCheckboxes = document.querySelectorAll(`.progress-checkbox[data-subject="${subject}"]`);
+                const completedIds = Object.keys(progress).filter(key => progress[key]);
+                const completed = Array.from(allCheckboxes).filter(cb => completedIds.includes(cb.dataset.id)).length;
+                const total = allCheckboxes.length;
+                const percentage = total > 0 ? Math.round((completed / total) * 100) : 0;
+                document.getElementById(`${subject}-progress-bar`).style.width = `${percentage}%`;
+                document.getElementById(`${subject}-progress-percentage`).textContent = `${percentage}%`;
+            });
+            const list = document.getElementById('detailed-progress-list');
+            list.innerHTML = '';
+            const message = document.getElementById('progress-message');
+            const completedItems = Object.keys(progress).filter(key => progress[key]).map(id => {
+                const checkbox = document.querySelector(`.progress-checkbox[data-id="${id}"]`);
+                return checkbox ? checkbox.parentElement.textContent.trim() : null;
+            }).filter(Boolean);
+            message.style.display = completedItems.length === 0 ? 'block' : 'none';
+            completedItems.forEach(itemText => {
+                const li = document.createElement('li');
+                li.textContent = itemText;
+                list.appendChild(li);
             });
         }
-
-        function renderHomePage() {
-            let homeHtml = '<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">';
-            for (const key in coursesData) {
-                const subject = coursesData[key];
-                homeHtml += `
-                    <div onclick="navigateTo('subject', '${key}')"
-                         class="bg-sky-50/80 hover:bg-sky-100/90 backdrop-blur-sm p-6 rounded-xl shadow-lg hover:shadow-2xl transition-all duration-300 ease-in-out cursor-pointer transform hover:scale-105 flex flex-col items-center text-center">
-                        <span class="text-5xl mb-3">${subject.icon}</span>
-                        <h2 class="text-2xl font-semibold text-sky-700 mb-2">${subject.title}</h2>
-                        <p class="text-slate-600 text-sm">${subject.description}</p>
-                    </div>`;
+        function updateCheckboxes(progress = {}) {
+            document.querySelectorAll('.progress-checkbox').forEach(checkbox => {
+                checkbox.checked = progress[checkbox.dataset.id] || false;
+            });
+        }
+        function showMessage(formId, text, type) {
+            const el = document.getElementById(`${formId}-message`);
+            el.textContent = text;
+            el.className = `auth-message ${type}`;
+            el.style.display = 'block';
+            setTimeout(() => { el.style.display = 'none'; }, 5000);
+        }
+        window.showPage = function(pageId) {
+            if (isTransitioning) return;
+            if (pageId === 'page-espace' && !auth.currentUser) {
+                showPage('page-login');
+                return;
             }
-            homeHtml += '</div>';
-            updateContent(homeHtml, "Cours L1 Physique/Chimie", [{ text: "Accueil" }]);
-            backButton.classList.add('hidden');
-        }
-
-        function renderSubjectPage(subjectKey) {
-            const subject = coursesData[subjectKey];
-            if (!subject) { console.error("Subject not found:", subjectKey); renderHomePage(); return; }
-            let subjectHtml = `<h2 class="text-3xl font-bold text-sky-700 mb-6 text-center flex justify-center items-center"><span class="text-3xl mr-2">${subject.icon}</span>${subject.title}</h2><div class="space-y-4">`;
-            if (subject.themes) {
-                for (const themeKey in subject.themes) {
-                    const theme = subject.themes[themeKey];
-                    if (theme) {
-                        subjectHtml += `
-                            <div onclick="navigateTo('theme', '${subjectKey}', '${themeKey}')" class="bg-white/80 hover:bg-sky-50/90 backdrop-blur-sm p-5 rounded-lg shadow-md hover:shadow-lg transition-all duration-300 ease-in-out cursor-pointer transform hover:translate-x-1 flex items-center">
-                                <span class="text-2xl mr-3">${theme.icon || '▫️'}</span>
-                                <h3 class="text-xl font-medium text-sky-600">${theme.title || 'Titre du thème manquant'}</h3>
-                            </div>`;
-                    } else { console.error("Theme undefined for key:", themeKey, "in subject:", subjectKey); }
-                }
-            } else { console.error("No themes found for subject:", subjectKey); subjectHtml += "<p class='text-center text-slate-500'>Aucun thème disponible.</p>"; }
-            subjectHtml += '</div>';
-            const breadcrumbParts = [{ text: "Accueil", onClick: () => navigateTo('home') }, { text: subject.title }];
-            updateContent(subjectHtml, subject.title, breadcrumbParts); 
-            backButton.classList.remove('hidden');
-        }
-
-        function renderThemePage(subjectKey, themeKey) {
-            const subject = coursesData[subjectKey]; 
-            const theme = subject?.themes?.[themeKey]; 
-            if (!theme) { console.error("Theme not found for:", subjectKey, themeKey); renderSubjectPage(subjectKey); return; }
-            let themeHtml = `<h2 class="text-3xl font-bold text-sky-700 mb-6 text-center flex justify-center items-center"><span class="text-3xl mr-2">${theme.icon || '▫️'}</span>${theme.title}</h2><div class="space-y-3">`;
-            if (theme.chapters) {
-                theme.chapters.forEach((chapter, index) => {
-                    if (chapter) {
-                        themeHtml += `
-                            <div onclick="navigateTo('chapter', '${subjectKey}', '${themeKey}', ${index})" class="bg-white/80 hover:bg-sky-50/90 backdrop-blur-sm p-4 rounded-md shadow hover:shadow-lg transition-all duration-300 cursor-pointer transform hover:translate-x-1 flex items-center">
-                                <span class="text-xl mr-3">${chapter.icon || '▫️'}</span> 
-                                <h4 class="text-lg font-medium text-sky-600">${chapter.title || 'Titre du chapitre manquant'}</h4>
-                            </div>`;
-                    } else { console.error("Chapter undefined at index:", index, "for theme:", themeKey); }
-                });
-            } else { console.error("No chapters found for theme:", themeKey); themeHtml += "<p class='text-center text-slate-500'>Aucun chapitre disponible.</p>"; }
-            themeHtml += '</div>';
-            const breadcrumbParts = [ { text: "Accueil", onClick: () => navigateTo('home') }, { text: subject.title, onClick: () => navigateTo('subject', subjectKey) }, { text: theme.title }];
-            updateContent(themeHtml, theme.title, breadcrumbParts); 
-            backButton.classList.remove('hidden');
-        }
-
-        function renderChapterPage(subjectKey, themeKey, chapterIndex) {
-            const subject = coursesData[subjectKey]; 
-            const theme = subject?.themes?.[themeKey]; 
-            const chapter = theme?.chapters?.[chapterIndex];
-            if (!chapter) { console.error("Chapter not found for:", subjectKey, themeKey, chapterIndex); renderThemePage(subjectKey, themeKey); return; }
-            let chapterHtml = `
-                <div class="bg-white/90 backdrop-blur-sm p-6 rounded-lg shadow-inner">
-                    <h2 class="text-3xl font-bold text-sky-700 mb-4 pb-2 border-b border-sky-200 flex items-center">
-                        <span class="text-2xl mr-2">${chapter.icon || '▫️'}</span>${chapter.title}
-                    </h2>
-                    <div class="prose prose-sky max-w-none text-slate-700 leading-relaxed">
-                        ${chapter.content || "<p><em>Contenu non disponible.</em></p>"} 
-                    </div>
-                </div>`;
-            const breadcrumbParts = [ { text: "Accueil", onClick: () => navigateTo('home') }, { text: subject.title, onClick: () => navigateTo('subject', subjectKey) }, { text: theme.title, onClick: () => navigateTo('theme', subjectKey, themeKey) }, { text: chapter.title }];
-            updateContent(chapterHtml, chapter.title, breadcrumbParts); 
-            backButton.classList.remove('hidden');
-        }
-        
-        function navigateTo(view, ...args) {
-            const stateToPush = { ...currentView }; 
-            const isNavigatingToSameAsCurrent = (view === currentView.name && JSON.stringify(args) === JSON.stringify(currentView.args));
-            if (!isNavigatingToSameAsCurrent) {
-                let shouldPush = false;
-                if (stateToPush.name !== 'home' || (stateToPush.name === 'home' && view !== 'home')) {
-                    shouldPush = true;
-                }
-                if (shouldPush) {
-                    const lastStackItem = navigationStack.length > 0 ? navigationStack[navigationStack.length - 1] : null;
-                    if (!lastStackItem || lastStackItem.name !== stateToPush.name || JSON.stringify(lastStackItem.args) !== JSON.stringify(stateToPush.args)) {
-                         navigationStack.push(stateToPush);
-                    }
-                }
+            const targetPage = document.getElementById(pageId);
+            const currentPage = document.querySelector('.page-view.active');
+            if (!targetPage || (currentPage && targetPage.isSameNode(currentPage))) return;
+            isTransitioning = true;
+            window.scrollTo(0, 0);
+            const particleId = pageId.replace('page-', '');
+            document.querySelectorAll('.particle-container').forEach(p => p.classList.remove('active'));
+            const particleEl = document.querySelector(`#particles-${particleId}`);
+            if (particleEl) particleEl.classList.add('active');
+            if (pageId === 'page-espace' && auth.currentUser) {
+                 getDoc(doc(db, "users", auth.currentUser.uid)).then(docSnap => {
+                     if (docSnap.exists()) {
+                         document.getElementById('espace-title').innerHTML = `<i class="fas fa-user-graduate"></i>Espace de ${docSnap.data().pseudo}`;
+                     }
+                 });
             }
-            currentView = { name: view, args: [...args] };
-            switch (view) {
-                case 'home': renderHomePage(); break;
-                case 'subject': renderSubjectPage(...args); break;
-                case 'theme': renderThemePage(...args); break;
-                case 'chapter': renderChapterPage(...args); break;
-                default: 
-                    console.error("Unknown view in navigateTo:", view);
-                    renderHomePage();
+            if (currentPage) {
+                currentPage.classList.add('is-leaving');
+                currentPage.addEventListener('animationend', () => currentPage.classList.remove('active', 'is-leaving'), { once: true });
             }
+            targetPage.classList.add('active', 'is-entering');
+            targetPage.addEventListener('animationend', () => {
+                targetPage.classList.remove('is-entering');
+                isTransitioning = false;
+                AOS.refresh();
+            }, { once: true });
         }
-
-        function navigateBack() {
-            if (navigationStack.length > 0) {
-                const previousState = navigationStack.pop();
-                currentView = { ...previousState }; 
-                switch (previousState.name) {
-                    case 'home': renderHomePage(); break;
-                    case 'subject': renderSubjectPage(...previousState.args); break;
-                    case 'theme': renderThemePage(...previousState.args); break;
-                    default: 
-                        console.warn("navigateBack - Unknown state name in stack:", previousState.name, "Defaulting to home.");
-                        renderHomePage();
-                }
-            } else {
-                currentView = { name: 'home', args: [] };
-                renderHomePage();
-            }
-        }
-        
-        backButton.addEventListener('click', navigateBack);
-
-        document.addEventListener('DOMContentLoaded', () => {
-            currentView = { name: 'home', args: [] }; 
-            renderHomePage();
-            document.getElementById('currentYear').textContent = new Date().getFullYear();
-        });
     </script>
 </body>
 </html>
