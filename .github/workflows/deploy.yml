@@ -29,7 +29,7 @@ jobs:
     steps:
       # 1. Récupère le code de votre dépôt
       - name: Checkout
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4 # MISE À JOUR
 
       # 2. Remplace les placeholders par les vrais secrets
       - name: Replace Firebase config placeholders
@@ -44,11 +44,11 @@ jobs:
 
       # 3. Prépare les fichiers du site pour le déploiement
       - name: Setup Pages
-        uses: actions/configure-pages@v3
+        uses: actions/configure-pages@v5 # MISE À JOUR
 
       # 4. Met en ligne les fichiers du site en tant qu'artefact
       - name: Upload artifact
-        uses: actions/upload-pages-artifact@v2
+        uses: actions/upload-pages-artifact@v3 # MISE À JOUR
         with:
           # Met en ligne le contenu du dossier racine
           path: '.'
@@ -56,5 +56,4 @@ jobs:
       # 5. Déploie l'artefact sur GitHub Pages
       - name: Deploy to GitHub Pages
         id: deployment
-        uses: actions/deploy-pages@v2
-
+        uses: actions/deploy-pages@v4 # MISE À JOUR
